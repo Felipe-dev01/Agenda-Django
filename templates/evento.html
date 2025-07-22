@@ -4,7 +4,7 @@
   <h2>Evento</h2>
 
   <form action="submit" method="POST"> {% csrf_token %}
-    <input type="number" name="id_evento" value="{{ evento.id }}">
+    <input type="number" name="id_evento" value="{{ evento.id }}" hidden>
     <label for="">Título</label>
     <br />
     <input type="text" name="titulo" size="24" value="{{ evento.titulo }}" />

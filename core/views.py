@@ -62,17 +62,24 @@ def submit_evento(request):
         id_evento = request.POST.get("id_evento")
 
         if id_evento:
-            Evento.objects.filter(id=id_evento).update(
-                titulo=titulo,
-                data_evento=data_evento,
-                descricao=descricao,
-            )
+            evento = Evento.objects.get(id=id_evento)
+            if evento.usuario == usuario:
+                evento.titulo = titulo
+                evento.data_evento = data_evento
+                evento.descricao = descricao
+                evento.save()
+
+            # Evento.objects.filter(id=id_evento).update(
+            #     titulo=titulo,
+            #     data_evento=data_evento,
+            #     descricao=descricao,
+            # )
         else:
             Evento.objects.create(
                 titulo=titulo,
                 data_evento=data_evento,
                 descricao=descricao,
-                usuario=usuario,
+                usuario=usuario
             )
     return redirect("/")
 
