@@ -111,16 +111,3 @@ def json_lista_evento(request, id_usuario):
     dados = {"eventos": evento}
     return JsonResponse(list(evento), safe=False)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
