@@ -3,6 +3,9 @@ from core.models import Evento
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from datetime import datetime, timedelta
+from django.http.response import Http404, JsonResponse
+from django.contrib.auth.models import User
 
 # Create your views here.
 
@@ -24,20 +27,25 @@ def submit_login(request):
         username = request.POST.get("username")
         password = request.POST.get("password")
         usuario = authenticate(username=username, password=password)
-
+        
         if usuario is not None:
             login(request, usuario)
             return redirect("/")
         else:
             messages.error(request, "Usuário ou Senha Inválidos")
-
+            
     return redirect("/")
 
 
 @login_required(login_url="/login/")
 def lista_eventos(request):
     usuario = request.user
-    evento = Evento.objects.filter(usuario=usuario)
+    data_atual = datetime.now() - timedelta(hours=1)
+
+    #! Busca todas os eventos com datas maiores que a atual 
+    #? __gt = maiores que!
+    #? __lt = menor que!
+    evento = Evento.objects.filter(usuario = usuario, data_evento__gt=data_atual)
     dados = {"eventos": evento}
     return render(request, "agenda.html", dados)
 
@@ -48,7 +56,7 @@ def evento(request):
     dados = {}
     if id_evento:
         dados["evento"] = Evento.objects.get(id=id_evento)
-
+        
     return render(request, "evento.html", dados)
 
 
@@ -60,20 +68,15 @@ def submit_evento(request):
         descricao = request.POST.get("descricao")
         usuario = request.user
         id_evento = request.POST.get("id_evento")
-
+        
         if id_evento:
+            
             evento = Evento.objects.get(id=id_evento)
             if evento.usuario == usuario:
                 evento.titulo = titulo
                 evento.data_evento = data_evento
                 evento.descricao = descricao
                 evento.save()
-
-            # Evento.objects.filter(id=id_evento).update(
-            #     titulo=titulo,
-            #     data_evento=data_evento,
-            #     descricao=descricao,
-            # )
         else:
             Evento.objects.create(
                 titulo=titulo,
@@ -87,12 +90,37 @@ def submit_evento(request):
 @login_required(login_url="/login/")
 def delete_evento(request, id_evento):
     usuario = request.user
-    evento = Evento.objects.get(id=id_evento)
 
+    try:
+        evento = Evento.objects.get(id=id_evento)
+    except Exception:
+        raise Http404()
+    
     if usuario == evento.usuario:
         evento.delete()
-
+        
     else:
-        messages.error(request, "ID Fornecido não pertence ao usuário logado")
-
+        raise Http404()
+        
     return redirect("/")
+
+#! Fazendo uma função como se fosse uma API Externa
+def json_lista_evento(request, id_usuario):
+    usuario = User.objects.get(id=id_usuario)
+    evento = Evento.objects.filter(usuario = usuario).values('id', 'titulo')
+    dados = {"eventos": evento}
+    return JsonResponse(list(evento), safe=False)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
