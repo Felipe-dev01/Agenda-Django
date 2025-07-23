@@ -1,7 +1,3 @@
-Felipe-dev01: leia o projeto inteiro e desnvolva um readme.mk exelente personalizado saiba que esse projeto foi feito durante a aula 'Desenvolvimento Web com Python e Django' pela plataforma dio.pro
-
-Workspace: Coletando informações do workspace# Sistema de Agenda Django 📅
-
 Um sistema completo de gerenciamento de eventos pessoais desenvolvido com Django, criado durante o curso "Desenvolvimento Web com Python e Django" da plataforma [DIO](https://dio.me/).
 
 ## 📋 Sobre o Projeto
