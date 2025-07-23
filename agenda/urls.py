@@ -34,6 +34,9 @@ urlpatterns = [
 
     path('', RedirectView.as_view(url='/agenda/')),
     
+    path('cadastro/', views.cadastrar_user),
+    path('cadastro/submit', views.submit_cadastrar_user),
+
     path('login/', views.login_user),
     path('login/submit', views.submit_login),
     path('logout/', views.logout_user),

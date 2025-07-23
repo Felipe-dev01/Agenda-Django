@@ -1,6 +1,6 @@
 {% load static  %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <title>Agenda</title>
@@ -21,12 +21,16 @@
         <br/><br/>
         <button type="submit">Entrar</button>
       </form>
+
+      <a href="/cadastro/">Não tem cadastro?</a>
+
       {% for message in messages %}
         <br><br>
         <div align="center">
         <strong>Erro </strong>{{ message }}
         <div align="center">
       {% endfor %}
+
     </div>
   </body>
 </html>
